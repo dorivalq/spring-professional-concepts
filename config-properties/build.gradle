@@ -1,0 +1,109 @@
+buildscript {
+	dependencies {
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+		classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.1"
+		classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:${verifierVersion}"
+	}
+}
+
+//apply plugin: 'java'
+//apply plugin: 'idea'
+//apply plugin: 'eclipse'
+//apply plugin: 'maven-publish'
+//apply plugin: 'org.springframework.boot'
+//apply plugin: 'io.spring.dependency-management'
+//apply plugin: 'org.sonarqube'
+//apply plugin: 'jacoco'
+//apply plugin: 'spring-cloud-contract'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+//dependencyManagement {
+//	imports {
+//		mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2021.0.2'
+//	}
+//}
+dependencies {
+	implementation("com.adp.pi:config-properties-lib:7.0.0.local")
+}
+//bootJar {
+//	enabled = false
+//}
+//
+//jar {
+//	enabled = true
+//}
+//
+//jacoco {
+//	toolVersion = "0.8.7"
+//}
+//
+//configurations {
+//	compile.exclude module: "log4j-over-slf4j"
+//	compile.exclude module: "slf4j-log4j12"
+//	compile.exclude module: "msgpack"
+//}
+
+dependencies {
+	compileOnly("org.projectlombok:lombok:${lombokVersion}")
+	annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:2.6.6")
+
+	implementation("org.springframework.boot:spring-boot-starter:2.6.6")
+	implementation("commons-collections:commons-collections:3.2.2")
+	implementation("commons-io:commons-io:2.5")
+
+	testImplementation("junit:junit:${junitVersion}")
+	testImplementation("org.mockito:mockito-core:${mockitoCoreVersion}")
+	testImplementation("org.powermock:powermock-core:${powerMockVersion}")
+	testImplementation("org.powermock:powermock-api-mockito2:${powerMockVersion}")
+	testImplementation("org.powermock:powermock-module-junit4:${powerMockVersion}")
+	testImplementation("com.h2database:h2:${h2Version}")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+//	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	testImplementation("org.projectlombok:lombok:${lombokVersion}")
+	testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+// https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api
+	implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+
+	//contract testing
+	testImplementation("org.springframework.boot:spring-boot-starter-integration:${springBootVersion}")
+	testImplementation("org.springframework.cloud:spring-cloud-starter-contract-verifier:${verifierVersion}")
+
+	testImplementation("org.projectlombok:lombok:${lombokVersion}")
+	testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+}
+
+test {
+//	jvmArgs("--add-opens", "java.base/java.time=ALL-UNNAMED")
+//	jvmArgs("--add-opens", "java.base/java.text=ALL-UNNAMED")
+//	jvmArgs("--add-opens", "java.base/java.net=ALL-UNNAMED")
+//	jvmArgs("--add-opens", "java.base/java.util=ALL-UNNAMED")
+//	jvmArgs("--add-opens", "java.base/java.util.stream=ALL-UNNAMED")
+//
+//	jacocoTestReport {
+//		reports {
+//			xml.enabled true
+//			html.destination file("${buildDir}/jacocoHtml")
+//		}
+//	}
+//	finalizedBy jacocoTestReport
+
+	useJUnitPlatform()
+
+	systemProperty("pi.canonicalModel.files", "schema/piClientModel.json,schema/piCanonicalAssociateModel.json")
+	systemProperty("user.timezone", "UTC")
+	systemProperty("logging.level.com.adp.pi.eventmachine", "DEBUG")
+	systemProperty("pi.sqs.consumer.enabled", "false")
+}
+
+tasks.withType(Test) {
+	useJUnitPlatform()
+}
+
+
+
+clean.doFirst {
+	delete "${rootDir}/target"
+}

@@ -1,0 +1,16 @@
+topicName: "name:of:topic"
+pi:
+  eventmachine:
+    newFlow: true
+    schemaName: '"name_of_schema"'
+sharding:
+  client:
+    httpHeaderInterceptor:
+      enabled: true
+    httpUrlInterceptor:
+      enabled: true
+spring:
+  application:
+    name: config-app
+#logging:
+#  level: error
